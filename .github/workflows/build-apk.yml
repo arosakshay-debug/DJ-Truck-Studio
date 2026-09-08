@@ -21,8 +21,10 @@ jobs:
         uses: android-actions/setup-android@v3
 
       - name: Extract Android project
-        run: |
-          unzip -o DJ_Truck_Studio_Android_Project.zip
+  run: |
+    ZIP=$(find . -maxdepth 1 -type f -name "*.zip" | head -n 1)
+    echo "Found ZIP: $ZIP"
+    unzip -o "$ZIP"
 
       - name: Set up Gradle
         uses: gradle/actions/setup-gradle@v4
