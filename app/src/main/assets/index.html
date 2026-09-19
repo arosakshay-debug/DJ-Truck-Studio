@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<meta name="viewport"
+      content="width=device-width,
+      initial-scale=1,
+      maximum-scale=1,
+      user-scalable=no">
+
+<title>DJ Truck Studio</title>
+
+<style>
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    background: #070a10;
+    color: white;
+    font-family: Arial, sans-serif;
+    overflow: hidden;
+}
+
+#topbar {
+    height: 54px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    background: #111725;
+    border-bottom: 1px solid #29344b;
+}
+
+.title {
+    flex: 1;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+button {
+    background: #182238;
+    color: white;
+    border: 1px solid #40516e;
+    border-radius: 8px;
+    padding: 8px 12px;
+    font-weight: bold;
+}
+
+button:active {
+    transform: scale(.96);
+}
+
+#stage {
+    position: relative;
+    height: calc(100vh - 54px);
+    overflow: hidden;
+    background:
+        radial-gradient(circle at center,
+        #24334d 0%,
+        #0b101b 55%,
+        #05070c 100%);
+}
+
+/* TRUCK */
+
+#truck {
+    position: absolute;
+    width: 540px;
+    height: 290px;
+    left: 50%;
+    top: 50%;
+
+    transform:
+        translate(-50%, -50%)
+        perspective(900px)
+        rotateX(8deg)
+        rotateY(-12deg);
+
+    transform-style: preserve-3d;
+}
+
+.truckBody {
+    position: absolute;
+    left: 55px;
+    top: 80px;
+    width: 430px;
+    height: 145px;
+
+    border-radius: 12px;
+
+    background:
+        linear-gradient(
+            #3b475e,
+            #121824
+        );
+
+    border: 3px solid #65738b;
+
+    box-shadow:
+        0 25px 40px #000;
+}
+
+.cab {
+    position: absolute;
+    left: 5px;
+    top: 105px;
+
+    width: 120px;
+    height: 120px;
+
+    border-radius: 15px 5px 5px 15px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #45536b,
+            #111722
+        );
+
+    border: 3px solid #65738b;
+}
+
+.window {
+    position: absolute;
+    left: 25px;
+    top: 120px;
+
+    width: 78px;
+    height: 52px;
+
+    background: #06121e;
+
+    border: 2px solid #00e5ff;
+
+    border-radius: 7px;
+
+    box-shadow:
+        0 0 12px #00e5ff55;
+}
+
+.wheel {
+    position: absolute;
+
+    width: 65px;
+    height: 65px;
+
+    border-radius: 50%;
+
+    background: #030405;
+
+    border: 10px solid #303744;
+
+    box-shadow:
+        inset 0 0 0 5px #0a0c11;
+
+    top: 195px;
+}
+
+.wheel1 {
+    left: 75px;
+}
+
+.wheel2 {
+    left: 365px;
+}
+
+.rack {
+    position: absolute;
+
+    left: 145px;
+    top: 100px;
+
+    width: 305px;
+    height: 100px;
+
+    background: #090d15;
+
+    border: 2px solid #77859e;
+
+    border-radius: 5px;
+}
+
+/* EQUIPMENT */
+
+#equipment {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.item {
+    position: absolute;
+
+    width: 62px;
+    height: 62px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    text-align: center;
+
+    font-size: 10px;
+    font-weight: bold;
+
+    background: #121827;
+
+    border: 2px solid #71819d;
+
+    border-radius: 8px;
+
+    box-shadow:
+        0 0 12px #00d9ff44;
+
+    touch-action: none;
+}
+
+.sub {
+    border-color: #ff35d4;
+
+    box-shadow:
+        0 0 20px #ff35d466;
+}
+
+.light {
+    border-color: #00e5ff;
+
+    box-shadow:
+        0 0 20px #00e5ff88;
+}
+
+/* CONTROL PANEL */
+
+#panel {
+
+    position: absolute;
+
+    right: 10px;
+    top: 10px;
+
+    width: 220px;
+
+    padding: 12px;
+
+    background: #101522ee;
+
+    border: 1px solid #35415b;
+
+    border-radius: 12px;
+}
+
+#panel h3 {
+    margin-top: 0;
+}
+
+label {
+    display: block;
+
+    margin-top: 10px;
+
+    font-size: 12px;
+
+    color: #aebbd0;
+}
+
+input[type="range"] {
+    width: 100%;
+}
+
+input[type="color"] {
+    width: 100%;
+    height: 35px;
+}
+
+/* BUTTON PANEL */
+
+#buttons {
+
+    position: absolute;
+
+    left: 10px;
+    bottom: 10px;
+
+    max-width: 450px;
+
+    display: flex;
+
+    flex-wrap: wrap;
+
+    gap: 7px;
+
+    padding: 10px;
+
+    background: #101522dd;
+
+    border:
+        1px solid #35415b;
+
+    border-radius: 12px;
+}
+
+.info {
+    font-size: 11px;
+    color: #8d9ab0;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div id="topbar">
+
+<div class="title">
+🚚 DJ TRUCK STUDIO
+</div>
+
+<button onclick="saveBuild()">SAVE</button>
+
+<button onclick="loadBuild()">LOAD</button>
+
+<button onclick="resetBuild()">RESET</button>
+
+</div>
+
+<div id="stage">
+
+<div id="truck">
+
+<div class="truckBody"></div>
+
+<div class="cab"></div>
+
+<div class="window"></div>
+
+<div class="rack"></div>
+
+<div class="wheel wheel1"></div>
+
+<div class="wheel wheel2"></div>
+
+<div id="equipment"></div>
+
+</div>
+
+<div id="panel">
+
+<h3>LIGHTING</h3>
+
+<label>RGB Colour</label>
+
+<input
+id="color"
+type="color"
+value="#00e5ff"
+oninput="changeColor(this.value)">
+
+<label>Brightness</label>
+
+<input
+id="brightness"
+type="range"
+min="0"
+max="100"
+value="80"
+oninput="changeBrightness(this.value)">
+
+<label>Animation Speed</label>
+
+<input
+id="speed"
+type="range"
+min="0"
+max="100"
+value="50">
+
+<p class="info">
+Drag equipment around the truck.
+</p>
+
+</div>
+
+<div id="buttons">
+
+<button onclick="addItem('SUBWOOFER','sub')">
++ SUB
+</button>
+
+<button onclick="addItem('SPEAKER','')">
++ SPEAKER
+</button>
+
+<button onclick="addItem('AMPLIFIER','')">
++ AMP
+</button>
+
+<button onclick="addItem('RGB LIGHT','light')">
++ RGB
+</button>
+
+</div>
+
+</div>
+
+<script>
+
+const equipment =
+document.getElementById("equipment");
+
+let count = 0;
+
+function addItem(name, type) {
+
+    count++;
+
+    const item =
+    document.createElement("div");
+
+    item.className =
+    "item " + type;
+
+    item.textContent = name;
+
+    item.style.left =
+    (150 + ((count - 1) % 4) * 68) + "px";
+
+    item.style.top =
+    (110 + Math.floor((count - 1) / 4) * 65) + "px";
+
+    equipment.appendChild(item);
+
+    makeDraggable(item);
+}
+
+function makeDraggable(element) {
+
+    let startX;
+    let startY;
+
+    let originalX;
+    let originalY;
+
+    element.addEventListener(
+        "pointerdown",
+        function(event) {
+
+            element.setPointerCapture(
+                event.pointerId
+            );
+
+            startX = event.clientX;
+            startY = event.clientY;
+
+            originalX = element.offsetLeft;
+            originalY = element.offsetTop;
+
+            function move(e) {
+
+                element.style.left =
+                (originalX +
+                e.clientX -
+                startX) + "px";
+
+                element.style.top =
+                (originalY +
+                e.clientY -
+                startY) + "px";
+            }
+
+            function stop() {
+
+                element.removeEventListener(
+                    "pointermove",
+                    move
+                );
+
+                element.removeEventListener(
+                    "pointerup",
+                    stop
+                );
+            }
+
+            element.addEventListener(
+                "pointermove",
+                move
+            );
+
+            element.addEventListener(
+                "pointerup",
+                stop
+            );
+        }
+    );
+}
+
+function changeColor(color) {
+
+    document
+    .querySelectorAll(".light")
+    .forEach(function(light) {
+
+        light.style.borderColor =
+        color;
+
+        light.style.boxShadow =
+        "0 0 20px " + color;
+
+    });
+}
+
+function changeBrightness(value) {
+
+    document
+    .querySelectorAll(".light")
+    .forEach(function(light) {
+
+        light.style.opacity =
+        value / 100;
+
+    });
+}
+
+function saveBuild() {
+
+    localStorage.setItem(
+        "DJ_TRUCK_BUILD",
+        equipment.innerHTML
+    );
+
+    alert("Build saved!");
+
+}
+
+function loadBuild() {
+
+    const saved =
+    localStorage.getItem(
+        "DJ_TRUCK_BUILD"
+    );
+
+    if (!saved) {
+
+        alert("No saved build.");
+
+        return;
+    }
+
+    equipment.innerHTML =
+    saved;
+
+    equipment
+    .querySelectorAll(".item")
+    .forEach(makeDraggable);
+
+    alert("Build loaded!");
+
+}
+
+function resetBuild() {
+
+    equipment.innerHTML = "";
+
+    count = 0;
+
+}
+
+</script>
+
+</body>
+
+  </html>
