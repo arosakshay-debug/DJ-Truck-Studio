@@ -1,6 +1,10 @@
 name: Build DJ Truck Studio APK
 
 on:
+  push:
+    branches:
+      - main
+
   workflow_dispatch:
 
 jobs:
@@ -8,36 +12,45 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Download repository
+      - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Set up Java
+      - name: Setup Java
         uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: '17'
 
-      - name: Set up Android
-        uses: android-actions/setup-android@v3
-
-      - name: Find and extract Android project
-        shell: bash
-        run: |
-          ZIP=$(find . -maxdepth 1 -type f -name "*.zip" | head -n 1)
-          echo "Found ZIP: $ZIP"
-          unzip -o "$ZIP"
-
-      - name: Set up Gradle
+      - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4
         with:
           gradle-version: '8.9'
 
+      - name: Find Android project
+        run: |
+          if [ -f "settings.gradle" ]; then
+            echo "Android project found at repository root"
+          elif [ -f "DJ_Truck_Studio_Android/settings.gradle" ]; then
+            echo "Android project found in DJ_Truck_Studio_Android"
+          else
+            echo "ERROR: Android project not found"
+            find . -maxdepth 3 -type f | head -100
+            exit 1
+          fi
+
       - name: Build APK
-        working-directory: DJ_Truck_Studio_Android
-        run: gradle assembleDebug
+        run: |
+          if [ -f "settings.gradle" ]; then
+            gradle assembleDebug
+          else
+            cd DJ_Truck_Studio_Android
+            gradle assembleDebug
+          fi
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: DJ-Truck-Studio-APK
-          path: DJ_Truck_Studio_Android/app/build/outputs/apk/debug/app-debug.apk
+          path: |
+            app/build/outputs/apk/debug/app-debug.apk
+            DJ_Truck_Studio_Android/app/build/outputs/apk/debug/app-debug.apk
